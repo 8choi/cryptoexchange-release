@@ -13,6 +13,13 @@ crypto:
     timezone: ${EXCHANGE_TIMEZONE:}
     # IMPORTANT: global AES key, MUST be exact 32 bytes:
     aes-key: ${EXCHANGE_AES_KEY:CryptoExchangeAESRandomSecureKey}
+    # set default fee:
+    fee:
+      default-maker-rate: 0.001
+      default-taker-rate: 0.002
+      # IMPORTANT: if set to true, the fee is always quote currency,
+      # e.g. BTC_USD will always charge USD when buy BTC:
+      always-charge-quote: ${ALWAYS_CHARGE_QUOTE:false}
     web:
       # the maximum size of HTTP post, default to 8K:
       max-request-body-size: 8192

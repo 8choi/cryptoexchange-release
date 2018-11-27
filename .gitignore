@@ -1,4 +1,6 @@
+playbook.retry
 .project
+.vscode
 
 # OSX.gitignore ###############################################################
 
