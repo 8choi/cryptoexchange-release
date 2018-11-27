@@ -494,6 +494,7 @@ CREATE TABLE withdraw_fees (
 
 CREATE TABLE orders (
   id BIGINT AUTO_INCREMENT NOT NULL,
+  chargeQuote TINYINT(1) NOT NULL,
   features INTEGER NOT NULL,
   sequenceIndex INTEGER NOT NULL,
   createdAt BIGINT NOT NULL,
