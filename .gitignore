@@ -2,6 +2,8 @@ playbook.retry
 .project
 .vscode
 
+node_modules
+
 # OSX.gitignore ###############################################################
 
 .DS_Store
