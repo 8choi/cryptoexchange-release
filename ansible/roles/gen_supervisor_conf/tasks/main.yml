@@ -13,7 +13,7 @@
     name: supervisor
     state: started
 
-- name: start crypto service
+- name: start crypto service {{ app }}
   serial: 1
   supervisorctl:
     name: "{{ app }}"
