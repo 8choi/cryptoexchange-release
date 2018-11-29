@@ -1,0 +1,8 @@
+# init app dir dir /srv/cryptoexchange/{{ app }}-{{ timestamp }}
+
+---
+
+- name: init app dir /srv/cryptoexchange/{{ app }}-{{ timestamp }}
+  file:
+    path: /srv/cryptoexchange/{{ app }}-{{ timestamp }}
+    state: directory

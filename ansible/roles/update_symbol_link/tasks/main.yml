@@ -1,0 +1,30 @@
+# update symbol link /srv/cryptoexchange/{{ app }} -> /srv/cryptoexchange/{{ app }}-{{ timestamp }}
+
+---
+
+- name: remove old symbol link /srv/cryptoexchange/{{ app }}
+  file:
+    path: /srv/cryptoexchange/{{ app }}
+    state: absent
+
+- name: create symbol link /srv/cryptoexchange/{{ app }} -> /srv/cryptoexchange/{{ app }}-{{ timestamp }}
+  file:
+    src: /srv/cryptoexchange/{{ app }}-{{ timestamp }}
+    dest: /srv/cryptoexchange/{{ app }}
+    state: link
+
+- name: remove old deployed targets from /srv/cryptoexchange/{{ app }}-*
+  shell: "ls -td -1 {{ app }}-* | tail -n +11"
+  args:
+    chdir: /srv/cryptoexchange/
+  register: to_be_deleted
+
+- name: will remove old deployed targets
+  debug: msg="{{ item }}"
+  with_items: "{{ to_be_deleted.stdout_lines }}"
+
+- name: actually remove old deployed jars
+  file:
+    name: /srv/cryptoexchange/{{ item }}
+    state: absent
+  with_items: "{{ to_be_deleted.stdout_lines }}"

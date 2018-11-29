@@ -1,0 +1,9 @@
+# disable nginx
+
+---
+
+- name: stop and disable service nginx
+  service:
+    name: nginx
+    state: stopped
+    enabled: no

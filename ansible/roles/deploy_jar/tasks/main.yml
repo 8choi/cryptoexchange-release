@@ -1,0 +1,8 @@
+# deploy jar file
+
+---
+
+- name: copy jar
+  copy:
+    src: ../snapshot/crypto-{{ app }}.jar
+    dest: /srv/cryptoexchange/{{ app }}-{{ timestamp }}/

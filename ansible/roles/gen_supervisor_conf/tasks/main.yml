@@ -1,0 +1,20 @@
+# generate supervisor conf
+
+---
+
+- name: generate supervisor conf
+  template:
+    src: templates/supervisor-{{ deploy_type }}.j2
+    dest: /etc/supervisor/conf.d/{{ app }}.conf
+
+- name: start supervisor if not running
+  serial: 1
+  service:
+    name: supervisor
+    state: started
+
+- name: start crypto service
+  serial: 1
+  supervisorctl:
+    name: "{{ app }}"
+    state: restarted
