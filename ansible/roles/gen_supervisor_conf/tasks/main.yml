@@ -16,5 +16,5 @@
 - name: start crypto service {{ app }}
   serial: 1
   supervisorctl:
-    name: "{{ app }}"
+    name: "g-{{ app }}:"
     state: restarted

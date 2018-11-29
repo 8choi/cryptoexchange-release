@@ -1,146 +1,124 @@
-######################################
-## Deploy Highdax ALL-IN-ONE Script ##
-######################################
-
-# NOTE: install nodejs 10.x manually:
-# curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
-# sudo apt-get install -y nodejs
+#
+# Deploy Highdax ALL-IN-ONE Script
+# For Ubuntu Server 16.04 ONLY!
+#
+# NOTE: manually add the following before run ansible:
+#
+# 1. add apt source for nodejs 10.x manually:
+#    $ curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+#
+# 2. add pgp key for openresty:
+#    $ wget -qO - https://openresty.org/package/pubkey.gpg | sudo apt-key add -
+#
+# 3. install python, redis, mysql:
+#    $ sudo apt-get install python software-properties-common redis-server mysql-server-5.7
+#
+# 4. add apt source for openresty:
+#    $ sudo add-apt-repository -y "deb http://openresty.org/package/ubuntu $(lsb_release -sc) main"
+#    $ sudo apt-get update
+#
+# valid deploy_type:
+#   jar: jar executable
+#   js: nodejs source
+#   mq: rocketmq binary
+#   www: openresty for www service
+#   (TODO) blockchain: block chain service
 
 ---
 
-- hosts: highdax
-  vars:
-    DOMAIN: local.highdax.com
-  tasks:
-    - name: start deploy
-      debug: msg="start deploy highdax..."
-    ########## apt install ##########
-    - name: install open-jdk-8
-      apt:
-        name: openjdk-8-jre-headless
-    - name: install nginx
-      apt:
-        name: nginx
-    - name: install supervisor
-      apt:
-        name: supervisor
-    - name: install redis
-      apt:
-        name: redis-server
-    ########## init dirs ##########
-    - name: init snapshot dir
-      file:
-        path: /data/spot-match-snapshot/
-        state: directory
-        owner: www-data
-        group: www-data
-    - name: init log dir
-      file:
-        path: /var/log/crypto/
-        state: directory
-        owner: www-data
-        group: www-data
-    - name: init app dir
-      file:
-        path: /srv/cryptoexchange/build/
-        state: directory
-        owner: www-data
-        group: www-data
-    - name: init rocketmq data dir
-      file:
-        path: /data/rocketmq/
-        state: directory
-        owner: www-data
-        group: www-data
-    ########## copy jar files ##########
-    - name: copy api
-      copy:
-        src: ../snapshot/crypto-api.jar
-        dest: /srv/cryptoexchange/build/crypto-api.jar
-    - name: copy config
-      copy:
-        src: ../snapshot/crypto-config.jar
-        dest: /srv/cryptoexchange/build/crypto-config.jar
-    - name: copy manage
-      copy:
-        src: ../snapshot/crypto-manage.jar
-        dest: /srv/cryptoexchange/build/crypto-manage.jar
-    - name: copy quotation
-      copy:
-        src: ../snapshot/crypto-quotation.jar
-        dest: /srv/cryptoexchange/build/crypto-quotation.jar
-    - name: copy sequence
-      copy:
-        src: ../snapshot/crypto-sequence.jar
-        dest: /srv/cryptoexchange/build/crypto-sequence.jar
-    - name: copy spot-clearing
-      copy:
-        src: ../snapshot/crypto-spot-clearing.jar
-        dest: /srv/cryptoexchange/build/crypto-spot-clearing.jar
-    - name: copy spot-match
-      copy:
-        src: ../snapshot/crypto-spot-match.jar
-        dest: /srv/cryptoexchange/build/crypto-spot-match.jar
-    - name: copy ui
-      copy:
-        src: ../snapshot/crypto-ui.jar
-        dest: /srv/cryptoexchange/build/crypto-ui.jar
-    ########## copy js files ##########
-    - name: copy notification
-      copy:
-        src: ../snapshot/notification
-        dest: /srv/cryptoexchange/build/
-    - name: run npm install
-      npm:
-        executable: /usr/bin/npm --unsafe-perm=true --allow-root
-        path: /srv/cryptoexchange/build/notification
-    ########## copy config files ##########
-    - name: copy config repo
-      copy:
-        src: ../config-repo
-        dest: /srv/cryptoexchange/
-    ########## copy rocketmq files ##########
-    - name: copy rocketmq
-      copy:
-        src: ../rocketmq
-        dest: /srv/
-    ########## copy static resources ##########
-    - name: init static dir
-      file:
-        path: /srv/cryptoexchange/apps/ui/src/main/
-        state: directory
-        owner: www-data
-        group: www-data
-    - name: copy static resources
-      copy:
-        src: ../resources
-        dest: /srv/cryptoexchange/apps/ui/src/main/
-        owner: www-data
-        group: www-data
-    ########## update nginx config files ##########
-    - name: copy nginx conf
-      copy:
-        src: ../local/nginx
-        dest: /srv/cryptoexchange/build/local/
-    - name: delete nginx old conf
-      file:
-        path: /etc/nginx/sites-enabled/default
-        state: absent
-    - name: link nginx conf
-      file:
-        src: /srv/cryptoexchange/build/local/nginx/highdax.conf
-        dest: /etc/nginx/sites-enabled/default
-        state: link
-    - name: reload nginx
-      service:
-        name: nginx
-        state: reloaded
-    ########## update supervisor config file ##########
-    - name: copy supervisor highdax conf
-      copy:
-        src: ../local/supervisor/highdax.conf
-        dest: /etc/supervisor/conf.d/highdax.conf
-    - name: copy supervisor rocketmq conf
-      copy:
-        src: ../local/supervisor/rocketmq.conf
-        dest: /etc/supervisor/conf.d/rocketmq.conf
+- hosts: "{{ app }}"
+  vars_files:
+    - environments/vars.yml
+  roles:
+    - { role: init_vars }
+    - { role: init_env }
+
+    - { role: init_log_dir }
+    - { role: init_app_dir, when app != 'mq' }
+
+    - { role: init_snapshot_dir, when: profile == 'native' and app == 'spot-match' }
+
+    - { role: install_filebeat,  when: profile != 'native' and app != 'mq' }
+    - { role: gen_filebeat_conf, when: profile != 'native' and app != 'mq' }
+
+    - { role: deploy_ssl, when: app == 'www' or app == 'hd-cold-wallet' }
+
+    - { role: install_nginx,  when: deploy_type == 'blockchain' or app == 'hd-cold-wallet' }
+    - { role: gen_nginx_conf, when: deploy_type == 'blockchain' or app == 'hd-cold-wallet' }
+
+    - { role: install_openresty,  when: deploy_type == 'static' }
+    - { role: deploy_static,      when: deploy_type == 'static' }
+    - { role: gen_openresty_conf, when: deploy_type == 'static' }
+
+    - { role: install_jre,        when: deploy_type == 'jar' or deploy_type == 'mq' }
+    - { role: deploy_jar,         when: deploy_type == 'jar' }
+    - { role: deploy_mq,          when: deploy_type == 'mq' }
+    - { role: deploy_config_repo, when: profile == 'native' and app == 'config' }
+
+    - { role: install_nodejs, when: deploy_type == 'js' }
+    - { role: deploy_js,      when: deploy_type == 'js' }
+
+    - { role: update_symbol_link, when: deploy_type == 'jar' or deploy_type == 'js' or deploy_type == 'static' }
+
+    - { role: install_supervisor,  when: deploy_type == 'jar' or deploy_type == 'js' or deploy_type == 'mq' }
+    - { role: gen_supervisor_conf, when: deploy_type == 'jar' or deploy_type == 'js' or deploy_type == 'mq' }
+
+  #   - name: init rocketmq data dir
+  #     file:
+  #       path: /data/rocketmq/
+  #       state: directory
+  #       owner: www-data
+  #       group: www-data
+  #   ########## copy jar files ##########
+
+
+  #   ########## copy config files ##########
+  #   - name: copy config repo
+  #     copy:
+  #       src: ../config-repo
+  #       dest: /srv/cryptoexchange/
+  #   ########## copy rocketmq files ##########
+  #   - name: copy rocketmq
+  #     copy:
+  #       src: ../rocketmq
+  #       dest: /srv/
+  #   ########## copy static resources ##########
+  #   - name: init static dir
+  #     file:
+  #       path: /srv/cryptoexchange/apps/ui/src/main/
+  #       state: directory
+  #       owner: www-data
+  #       group: www-data
+  #   - name: copy static resources
+  #     copy:
+  #       src: ../resources
+  #       dest: /srv/cryptoexchange/apps/ui/src/main/
+  #       owner: www-data
+  #       group: www-data
+  #   ########## update nginx config files ##########
+  #   - name: copy nginx conf
+  #     copy:
+  #       src: ../local/nginx
+  #       dest: /srv/cryptoexchange/build/local/
+  #   - name: delete nginx old conf
+  #     file:
+  #       path: /etc/nginx/sites-enabled/default
+  #       state: absent
+  #   - name: link nginx conf
+  #     file:
+  #       src: /srv/cryptoexchange/build/local/nginx/highdax.conf
+  #       dest: /etc/nginx/sites-enabled/default
+  #       state: link
+  #   - name: reload nginx
+  #     service:
+  #       name: nginx
+  #       state: reloaded
+  #   ########## update supervisor config file ##########
+  #   - name: copy supervisor highdax conf
+  #     copy:
+  #       src: ../local/supervisor/highdax.conf
+  #       dest: /etc/supervisor/conf.d/highdax.conf
+  #   - name: copy supervisor rocketmq conf
+  #     copy:
+  #       src: ../local/supervisor/rocketmq.conf
+  #       dest: /etc/supervisor/conf.d/rocketmq.conf

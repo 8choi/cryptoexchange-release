@@ -5,6 +5,12 @@
 
 ---
 
+- name: init var rate_limit
+  set_fact:
+    lua_rate_limit: "10"
+    lua_rate_burst: "15"
+    lua_redis_host: "127.0.0.1"
+
 - name: init var_timestamp by executing command
   shell: date +%Y-%m-%d_%H_%M_%S
   register: var_timestamp
@@ -35,6 +41,15 @@
   set_fact:
     xmx: "{{ var_xmx.stdout }}"
 
+- name: set var "xmx" to 1G if profile is native
+  when: profile == 'native'
+  set_fact:
+    xmx: "1024"
+
 - name: print var "xmx"
   debug:
     msg: "xmx = {{ xmx }}"
+
+- name: set var "dns_ip"
+  set_fact:
+    dns_ip: "8.8.8.8"

@@ -3,6 +3,5 @@
 ---
 
 - name: install java 8 runtime
-  when: deploy_type == 'jar' or deploy_type == 'mq'
   apt:
     name: openjdk-8-jre-headless

@@ -6,11 +6,11 @@
 
 - name: print app env
   debug: msg="{{ item.key }}={{ item.value }}"
-  with_dict: "{{ env[profile][app] }}"
+  with_dict: "{{ env[profile].get(app, {}) }}"
 
 - name: merge env and set as var "env_vars"
   set_fact:
-    env_vars: "{{ env[profile].global | combine( env[profile][app] ) }}"
+    env_vars: "{{ env[profile].global | combine( env[profile].get(app, {}) ) }}"
 
 - name: print env_vars
   debug: msg="{{ item.key }}={{ item.value }}"

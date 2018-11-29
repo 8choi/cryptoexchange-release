@@ -1,0 +1,66 @@
+# define global vars:
+
+---
+
+# app constants:
+apps:
+  api:
+    deploy_type: jar
+  config:
+    deploy_type: jar
+  hd-cold-wallet:
+    deploy_type: js
+  hd-hot-wallet:
+    deploy_type: jar
+  manage:
+    deploy_type: jar
+  mq:
+    deploy_type: mq
+  notification:
+    deploy_type: js
+  sequence:
+    deploy_type: jar
+  quotation:
+    deploy_type: jar
+  clearing:
+    deploy_type: jar
+  spot-clearing:
+    deploy_type: jar
+  spot-match:
+    deploy_type: jar
+  www:
+    deploy_type: static
+  ui:
+    deploy_type: jar
+
+# environments:
+env:
+  # profile: native
+  native:
+    global:
+      DOMAIN: local.highdax.com
+      NAMESRV_ADDR: 127.0.0.1:9876
+      CONFIG_SERVER: http://127.0.0.1:8888
+      API_ENDPOINT: http://api.local.highdax.com
+      UI_ENDPOINT: http://www.local.highdax.com
+      REDIS_HOST: 127.0.0.1:6379
+      DB_RW_HOST: 127.0.0.1
+      DB_RO_HOST: 127.0.0.1
+    notification:
+      EMPTY: yes
+    mq:
+      JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
+      ROCKETMQ_HOME: /srv/rocketmq
+    www:
+      EMPTY: yes
+  # profile: production
+  production:
+    global:
+      DOMAIN: highdax.com
+      CONFIG_SERVER: http://127.0.0.1:8888
+      API_ENDPOINT: http://api.production.highdax.com
+      UI_ENDPOINT: http://www.production.highdax.com
+      MQ_NAME_HOST: 172.0.0.1:9876
+      REDIS_HOST: 127.0.0.1:6379
+      DB_RW_HOST: 127.0.0.1
+      DB_RO_HOST: 127.0.0.1

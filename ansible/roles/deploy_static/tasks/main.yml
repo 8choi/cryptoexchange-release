@@ -1,0 +1,8 @@
+# copy static resources
+
+---
+
+- name: copy static resources for {{ app }}
+  copy:
+    src: ../resources/
+    dest: /srv/cryptoexchange/{{ app }}-{{ timestamp }}

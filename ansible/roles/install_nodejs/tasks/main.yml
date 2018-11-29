@@ -3,6 +3,5 @@
 ---
 
 - name: install nodejs
-  when: deploy_type == 'js'
   apt:
     name: nodejs

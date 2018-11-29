@@ -1,10 +1,10 @@
 #
-# supervisor template
+# supervisor template for nodejs
 #
 
 [program:{{ app }}]
 
-command      = java -Xmx{{ xmx }}m -Xms{{ xmx }}m -jar crypto-{{ app }}.jar
+command      = node crypto-{{ app }}.js
 environment  = {% for k, v in env_vars.items() %}{{ k }}="{{ v }}",{% endfor %}LAST="END"
 directory    = /srv/cryptoexchange/{{ app }}
 user         = www-data
