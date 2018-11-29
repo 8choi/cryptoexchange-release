@@ -3,7 +3,6 @@
 ---
 
 - name: init log dir /var/log/crypto/
-  when: deploy_type == 'jar' or deploy_type == 'js' or deploy_type == 'mq'
   file:
     path: /var/log/crypto/
     state: directory
