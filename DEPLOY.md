@@ -10,29 +10,39 @@
 
 4. Update and upgrade by:
 
-    $ sudo apt-get update
-    $ sudo apt-get upgrade
+```
+$ sudo apt-get update
+$ sudo apt-get upgrade
+```
 
 5. Add nodejs source by:
 
-    $ curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+```
+$ curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+```
 
 6. Add openresty source by:
 
-    $ wget -qO - https://openresty.org/package/pubkey.gpg | sudo apt-key add -
-    $ sudo apt-get install software-properties-common
-    $ sudo add-apt-repository -y "deb http://openresty.org/package/ubuntu $(lsb_release -sc) main"
-    $ sudo apt-get update
+```
+$ wget -qO - https://openresty.org/package/pubkey.gpg | sudo apt-key add -
+$ sudo apt-get install software-properties-common
+$ sudo add-apt-repository -y "deb http://openresty.org/package/ubuntu $(lsb_release -sc) main"
+$ sudo apt-get update
+```
 
-5. Install python, redis and MySQL manually:
+7. Install python, redis and MySQL manually:
 
-    $ sudo apt-get install python redis-server mysql-server-5.7
+```
+$ sudo apt-get install python redis-server mysql-server-5.7
+```
 
 ## Deploy
 
 The default hosts are `*.local.highdax.com` which is point to `127.0.0.1`, so you need add hosts into `/etc/hosts` by:
 
-    10.0.1.222 api.local.highdax.com config.local.highdax.com hd-cold-wallet.local.highdax.com hd-hot-wallet.local.highdax.com manage.local.highdax.com mq.local.highdax.com notification.local.highdax.com sequence.local.highdax.com quotation.local.highdax.com spot-clearing.local.highdax.com spot-match.local.highdax.com static.local.highdax.com ui.local.highdax.com wss.local.highdax.com www.local.highdax.com
+```
+10.0.1.222 api.local.highdax.com config.local.highdax.com hd-cold-wallet.local.highdax.com hd-hot-wallet.local.highdax.com manage.local.highdax.com mq.local.highdax.com notification.local.highdax.com sequence.local.highdax.com quotation.local.highdax.com spot-clearing.local.highdax.com spot-match.local.highdax.com static.local.highdax.com ui.local.highdax.com wss.local.highdax.com www.local.highdax.com
+```
 
 Change the IP `10.0.1.222` to your server's.
 
