@@ -18,6 +18,8 @@ def main():
     args = parser.parse_args()
     profile = args.profile[0]
     apps = args.apps
+    if len(apps) == 1 and apps[0] == 'ALL':
+        apps = ['api', 'manage', 'notification', 'sequence', 'quotation', 'clearing', 'spot-clearing', 'spot-match', 'ui']
     print('set basedir to: %s' % basedir)
     print('profile: %s' % profile)
     print('will deploy %s...' % ', '.join(apps))
