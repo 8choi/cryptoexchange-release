@@ -2,7 +2,7 @@
 
 ---
 
-# app constants:
+# app vars:
 apps:
   api:
     deploy_type: jar
@@ -32,6 +32,25 @@ apps:
     deploy_type: static
   ui:
     deploy_type: jar
+  btc:
+    deploy_type: blockchain
+    command: bitcoind -datadir=/data/blockchain -daemon=0 -printtoconsole -reindex -dbcache=1000 -maxmempool=500 -maxconnections=50 -disablewallet -server -rest -rpcbind=127.0.0.1 -rpcuser=bitcoin -rpcpassword=bitcoin -rpcallowip=127.0.0.1 -rpcport=8999
+  bch:
+    deploy_type: blockchain
+    command: bitcoind -datadir=/data/blockchain -daemon=0 -printtoconsole -reindex -dbcache=1000 -maxmempool=500 -maxconnections=50 -disablewallet -server -rest -rpcbind=127.0.0.1 -rpcuser=bitcoin -rpcpassword=bitcoin -rpcallowip=127.0.0.1 -rpcport=8999
+  eth:
+    deploy_type: blockchain
+    # command: geth --datadir /data/blockchain --nousb --syncmode full --gcmode=archive --cache 2048 --maxpeers 50 --rpc --rpcaddr 127.0.0.1 --rpcport 8999
+    command: /srv/parity/parity --no-download --mode=active --pruning=archive --cache-size-db=512 --auto-update=none --base-path=/data/blockchain --jsonrpc-port=8999 --jsonrpc-interface=127.0.0.1 --jsonrpc-hosts=all --no-ws
+  etc:
+    deploy_type: blockchain
+    command: geth --datadir /data/blockchain --cache 2048 --maxpeers 50 --rpc --rpcaddr 127.0.0.1 --rpcport 8999
+  ltc:
+    deploy_type: blockchain
+    command: litecoind -datadir=/data/blockchain -daemon=0 -printtoconsole -reindex -dbcache=1000 -maxmempool=500 -maxconnections=50 -disablewallet -server -rest -rpcbind=127.0.0.1 -rpcuser=bitcoin -rpcpassword=bitcoin -rpcallowip=127.0.0.1 -rpcport=8999
+  omni:
+    deploy_type: blockchain
+    command: omnicored -datadir=/data/blockchain -daemon=0 -printtoconsole -reindex -txindex -dbcache=1000 -maxmempool=500 -maxconnections=50 -disablewallet -server -rest -rpcbind=127.0.0.1 -rpcuser=bitcoin -rpcpassword=bitcoin -rpcallowip=127.0.0.1 -rpcport=8999
 
 # environments:
 env:
@@ -51,8 +70,6 @@ env:
     mq:
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
       ROCKETMQ_HOME: /srv/rocketmq
-    www:
-      EMPTY: yes
   # profile: production
   production:
     global:
@@ -64,3 +81,6 @@ env:
       REDIS_HOST: 127.0.0.1:6379
       DB_RW_HOST: 127.0.0.1
       DB_RO_HOST: 127.0.0.1
+    mq:
+      JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
+      ROCKETMQ_HOME: /srv/rocketmq
