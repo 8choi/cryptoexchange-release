@@ -66,7 +66,7 @@ crypto:
 spring:
   hd-rw-datasource:
     url: jdbc:mysql://${DB_HW_RW_HOST:${DB_RW_HOST:localhost}}/hd?useSSL=false&characterEncoding=utf8
-    username: hd_rw
+    username: ${DB_HD_RW_USERNAME:hd_rw}
     password: ${DB_HD_RW_PASSWORD:hd_rw_password}
     driver-class-name: com.mysql.jdbc.Driver
     hikari:

@@ -11,7 +11,7 @@ crypto:
       from-currency: USD
       to-currencies: AUD, CAD, CNY, EUR, GBP, HKD, JPY, KRW, RUB, SGD, TWD
       # TODO: change the following api-key to yours at https://www.alphavantage.co/support/#api-key
-      alphavantage-api-key: GV7BIQN1HIU1QKEG
+      alphavantage-api-key: ${ALPHAVANTAGE_API_KEY:GV7BIQN1HIU1QKEG}
   api:
     request:
       # set token key / secret that configured same as ui:
@@ -43,7 +43,7 @@ crypto:
 spring:
   ex-rw-datasource:
     url: jdbc:mysql://${DB_EX_RW_HOST:${DB_RW_HOST:localhost}}/ex?useSSL=false&characterEncoding=utf8
-    username: ex_rw
+    username: ${DB_EX_RW_USERNAME:ex_rw}
     password: ${DB_EX_RW_PASSWORD:ex_rw_password}
     driver-class-name: com.mysql.jdbc.Driver
     hikari:
@@ -56,7 +56,7 @@ spring:
       minimum-idle: 2
   ex-ro-datasource:
     url: jdbc:mysql://${DB_EX_RO_HOST:${DB_RO_HOST:localhost}}/ex?useSSL=false&characterEncoding=utf8
-    username: ex_ro
+    username: ${DB_EX_RO_USERNAME:ex_ro}
     password: ${DB_EX_RO_PASSWORD:ex_ro_password}
     driver-class-name: com.mysql.jdbc.Driver
     hikari:

@@ -12,16 +12,14 @@ crypto:
       enable-trailing-stop: true
   setting:
     fee:
-      default-maker-rate: 0.001
-      default-taker-rate: 0.002
       always-charge-quote: true
     mining:
-      enabled: true
+      enabled: false
       currency: CFC
       total: 5000000
       percent: 1.0
     divident:
-      enabled: true
+      enabled: false
       minimum: 100
       percent: 1.0
 

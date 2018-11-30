@@ -28,15 +28,24 @@ crypto:
         ui: ${INTERNAL_UI_KEY:UIInternalKey}
         wallet: ${INTERNAL_WALLET_KEY:WalletInternalKey}
         manage: ${INTERNAL_MANAGE_KEY:ManageInternalKey}
+  order:
+    features:
+      enable-fill-or-kill: ${ENABLE_FOK:false}
+      enable-immediate-or-cancel: ${ENABLE_IOC:false}
+      enable-post-only: ${ENABLE_POST_ONLY:false}
+      enable-hidden: ${ENABLE_HIDDEN:false}
+      enable-stop: ${ENABLE_STOP:false}
+      enable-stop-limit: ${ENABLE_STOP_LIMIT:false}
+      enable-trailing-stop: ${ENABLE_TRAILING_STOP:false}
   messaging:
     # RocketMQ name server address, default to "localhost:9876":
-    namesrv: ${MQ_NAME_HOST:localhost:9876}
+    namesrv: ${NAMESRV_ADDR:localhost:9876}
 
   # upload configuration:
   storage:
     # using "s3" or "static":
     type: s3
-    s3: 
+    s3:
       region: ${S3_REGION:ap-northeast-1}
       bucket: ${S3_BUCKET:sample}
       aws-api-key: ${S3_API_KEY:N/A}

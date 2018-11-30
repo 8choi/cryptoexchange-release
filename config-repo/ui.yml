@@ -46,7 +46,7 @@ crypto:
 spring:
   ui-rw-datasource:
     url: jdbc:mysql://${DB_UI_RW_HOST:${DB_RW_HOST:localhost}}/ui?useSSL=false&characterEncoding=utf8
-    username: ui_rw
+    username: ${DB_UI_RW_USERNAME:ui_rw}
     password: ${DB_UI_RW_PASSWORD:ui_rw_password}
     driver-class-name: com.mysql.jdbc.Driver
     hikari:
