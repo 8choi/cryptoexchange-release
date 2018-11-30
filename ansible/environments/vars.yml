@@ -58,29 +58,34 @@ env:
   native:
     global:
       DOMAIN: local.highdax.com
-      NAMESRV_ADDR: 127.0.0.1:9876
       CONFIG_SERVER: http://127.0.0.1:8888
       API_ENDPOINT: http://api.local.highdax.com
       UI_ENDPOINT: http://www.local.highdax.com
+      NAMESRV_ADDR: 127.0.0.1:9876
       REDIS_HOST: 127.0.0.1:6379
       DB_RW_HOST: 127.0.0.1
       DB_RO_HOST: 127.0.0.1
-    notification:
-      EMPTY: yes
     mq:
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
       ROCKETMQ_HOME: /srv/rocketmq
-  # profile: production
-  production:
+  # profile: test
+  test:
     global:
       DOMAIN: highdax.com
       CONFIG_SERVER: http://127.0.0.1:8888
       API_ENDPOINT: http://api.production.highdax.com
       UI_ENDPOINT: http://www.production.highdax.com
-      MQ_NAME_HOST: 172.0.0.1:9876
+      NAMESRV_ADDR: 172.0.0.1:9876
       REDIS_HOST: 127.0.0.1:6379
       DB_RW_HOST: 127.0.0.1
       DB_RO_HOST: 127.0.0.1
+      ENABLE_FOK: true
+      ENABLE_IOC: true
+      ENABLE_POST_ONLY: true
+      ENABLE_HIDDEN: true
+      ENABLE_STOP: true
+      ENABLE_STOP_LIMIT: true
+      ENABLE_TRAILING_STOP: true
     mq:
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
       ROCKETMQ_HOME: /srv/rocketmq
