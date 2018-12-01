@@ -15,7 +15,7 @@ crypto:
       host: ${WS_HOST:wss://wss.local.highdax.com}
     api:
       # API URL:
-      endpoint: ${API_ENDPOINT:https://api.local.highdax.com}
+      endpoint: ${API_ENDPOINT:http://localhost:8001}
       # api key / secret for API server:
       api-key: ${UI_API_KEY:UIInternalKey}
       api-secret: ${UI_API_SECRET:UIInternalSecret}
