@@ -69,7 +69,7 @@ http {
     lua_package_path "/etc/openresty/script/?.lua;;";
 
     # Add resolver for lua script
-    resolver {{ hostvars[groups[app.name]].lua_dns_ip }};
+    resolver {{ hostvars[inventory_hostname].lua_dns_ip }};
 
 	include /etc/openresty/conf.d/*.conf;
 }

@@ -5,12 +5,6 @@
 
 ---
 
-- name: init var
-  set_fact:
-    lua_rate_limit: "10"
-    lua_rate_burst: "15"
-    lua_redis_host: "127.0.0.1"
-
 - name: init var_timestamp by executing command
   shell: date +%Y-%m-%d_%H_%M_%S
   register: var_timestamp
@@ -37,5 +31,5 @@
     app: "{{ apps[name]|combine({'name': name, 'xmx': the_xmx, 'timestamp': var_timestamp.stdout }) }}"
 
 - name: print global var "app"
-  debug: msg="{{ item.key }}={{ item.value }}"
+  debug: msg="{{ item.key }} = {{ item.value }}"
   with_dict: "{{ app }}"
