@@ -36,6 +36,10 @@ $ sudo apt-get update
 $ sudo apt-get install python redis-server mysql-server-5.7
 ```
 
+## Make image
+
+It is highly recommended to make an image after preparement.
+
 ## Deploy
 
 The default hosts are `*.local.highdax.com` which is point to `127.0.0.1`, so you need add hosts into `/etc/hosts` by:
@@ -51,6 +55,8 @@ Change the IP `10.0.1.222` to your server's.
 Deploy RocketMQ only once:
 
     $ ansible/deploy.py --profile native mq
+
+Start RocketMQ manually by `sudo supervisorctl reload`.
 
 Init RocketMQ by upload `script/init-mq.sh` to `/srv/rocketmq` and run once.
 
