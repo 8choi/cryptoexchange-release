@@ -2,12 +2,12 @@
 
 ---
 
-- name: remove old binary
+- name: remove old rocketmq binary
   file:
     path: /srv/rocketmq
     state: absent
 
-- name: re-create rocketmq dir
+- name: create rocketmq dir /srv/rocketmq
   file:
     path: /srv/rocketmq
     state: directory
@@ -28,12 +28,12 @@
     dest: /srv/rocketmq/
     remote_src: yes
 
-- name: copy conf dir
+- name: copy rocketmq conf dir
   copy:
     src: environments/{{ profile }}/rocketmq/conf
     dest: /srv/rocketmq
 
-- name: make data dir for rocketmq
+- name: create rocketmq data dir /data/rocketmq/store
   file:
     path: /data/rocketmq/store
     state: directory

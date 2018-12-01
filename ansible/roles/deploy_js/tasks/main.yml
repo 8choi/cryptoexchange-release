@@ -1,7 +1,7 @@
 # copy nodejs source and run npm install
 ---
 
-- name: copy nodejs source
+- name: copy nodejs source {{ app }}
   copy:
     src: ../snapshot/{{ app }}/
     dest: /srv/cryptoexchange/{{ app }}-{{ timestamp }}

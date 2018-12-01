@@ -2,7 +2,7 @@
 
 ---
 
-- name: copy jar
+- name: copy crypto-{{ app }}.jar
   copy:
     src: ../snapshot/crypto-{{ app }}.jar
     dest: /srv/cryptoexchange/{{ app }}-{{ timestamp }}/
