@@ -53,14 +53,14 @@ apps:
     command: omnicored -datadir=/data/blockchain -daemon=0 -printtoconsole -reindex -txindex -dbcache=1000 -maxmempool=500 -maxconnections=50 -disablewallet -server -rest -rpcbind=127.0.0.1 -rpcuser=bitcoin -rpcpassword=bitcoin -rpcallowip=127.0.0.1 -rpcport=8999
 
 # environments:
-env:
+envs:
   # profile: native
   native:
     global:
       DOMAIN: local.highdax.com
       CONFIG_SERVER: http://127.0.0.1:8888
-      API_ENDPOINT: http://api.local.highdax.com
-      UI_ENDPOINT: http://www.local.highdax.com
+      API_ENDPOINT: http://127.0.0.1:7001
+      UI_ENDPOINT: http://127.0.0.1:7000
       NAMESRV_ADDR: 127.0.0.1:9876
       REDIS_HOST: 127.0.0.1:6379
       DB_RW_HOST: 127.0.0.1
@@ -68,24 +68,24 @@ env:
     mq:
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
       ROCKETMQ_HOME: /srv/rocketmq
-  # profile: test
-  test:
+  # profile: production
+  production:
     global:
       DOMAIN: highdax.com
       CONFIG_SERVER: http://127.0.0.1:8888
-      API_ENDPOINT: http://api.production.highdax.com
-      UI_ENDPOINT: http://www.production.highdax.com
+      API_ENDPOINT: http://172.18.0.16:7001
+      UI_ENDPOINT: http://172.18.0.128:7000
       NAMESRV_ADDR: 172.0.0.1:9876
       REDIS_HOST: 127.0.0.1:6379
       DB_RW_HOST: 127.0.0.1
       DB_RO_HOST: 127.0.0.1
-      ENABLE_FOK: true
-      ENABLE_IOC: true
-      ENABLE_POST_ONLY: true
-      ENABLE_HIDDEN: true
-      ENABLE_STOP: true
-      ENABLE_STOP_LIMIT: true
-      ENABLE_TRAILING_STOP: true
+      ENABLE_FOK: "true"
+      ENABLE_IOC: "true"
+      ENABLE_POST_ONLY: "true"
+      ENABLE_HIDDEN: "true"
+      ENABLE_STOP: "true"
+      ENABLE_STOP_LIMIT: "true"
+      ENABLE_TRAILING_STOP: "true"
     mq:
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
       ROCKETMQ_HOME: /srv/rocketmq

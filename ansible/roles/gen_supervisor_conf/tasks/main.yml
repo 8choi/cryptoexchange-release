@@ -4,8 +4,8 @@
 
 - name: generate supervisor conf
   template:
-    src: templates/supervisor-{{ deploy_type }}.j2
-    dest: /etc/supervisor/conf.d/{{ app }}.conf
+    src: templates/supervisor-{{ app.deploy_type }}.j2
+    dest: /etc/supervisor/conf.d/{{ app.name }}.conf
 
 - name: start supervisor if not running
   serial: 1
@@ -13,8 +13,8 @@
     name: supervisor
     state: started
 
-- name: start crypto service {{ app }}
+- name: start crypto service {{ app.name }}
   serial: 1
   supervisorctl:
-    name: "g-{{ app }}:"
+    name: "{{ app.name }}"
     state: restarted

@@ -2,7 +2,7 @@
 
 ---
 
-- name: copy static resources for {{ app }}
+- name: copy static resources for {{ app.name }}
   copy:
     src: ../resources/
-    dest: /srv/cryptoexchange/{{ app }}-{{ timestamp }}
+    dest: /srv/cryptoexchange/{{ app.name }}-{{ app.timestamp }}

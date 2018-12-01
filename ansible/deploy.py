@@ -24,8 +24,8 @@ def main():
     print('profile: %s' % profile)
     print('will deploy %s...' % ', '.join(apps))
     run('ansible-playbook --version')
-    for app in apps:
-        run('ansible-playbook -i environments/%s/hosts.yml playbook.yml --extra-vars "profile=%s app=%s"' % (profile, profile, app))
+    for name in apps:
+        run('ansible-playbook -i environments/%s/hosts.yml playbook.yml --extra-vars "profile=%s name=%s"' % (profile, profile, name))
 
 if __name__ == '__main__':
     main()

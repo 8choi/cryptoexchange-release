@@ -7,10 +7,10 @@ server {
     listen      443 ssl http2;
     listen [::]:443 ssl http2;
 
-    server_name cold.{{ env_vars.DOMAIN }};
+    server_name cold.{{ env.DOMAIN }};
 
-    ssl_certificate     /srv/ssl/cold.{{ env_vars.DOMAIN }}.crt;
-    ssl_certificate_key /srv/ssl/cold.{{ env_vars.DOMAIN }}.key;
+    ssl_certificate     /srv/ssl/cold.{{ env.DOMAIN }}.crt;
+    ssl_certificate_key /srv/ssl/cold.{{ env.DOMAIN }}.key;
 
     keepalive_timeout    90;
     client_max_body_size 1m;

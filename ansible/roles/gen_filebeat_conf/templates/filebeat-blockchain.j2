@@ -19,7 +19,7 @@ filebeat.prospectors:
   multiline.match: after
   fields:
     env: 'blockchain'
-    app: '{{ app }}'
+    app: '{{ app.name }}'
   fields_under_root: true
 
 processors:
@@ -30,7 +30,7 @@ processors:
     overwrite_keys: true
 
 output.elasticsearch:
-  hosts: ["{{ env_vars.ELK_HOST }}"]
+  hosts: ["{{ env.ELK_HOST }}"]
   protocol: "https"
   #username: "elastic"
   #password: "changeme"

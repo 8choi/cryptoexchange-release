@@ -61,10 +61,10 @@ server {
     listen      443 ssl http2;
     listen [::]:443 ssl http2;
 
-    server_name static.{{ env_vars.DOMAIN }};
+    server_name static.{{ env.DOMAIN }};
 
-    ssl_certificate     /srv/ssl/static.{{ env_vars.DOMAIN }}.crt;
-    ssl_certificate_key /srv/ssl/static.{{ env_vars.DOMAIN }}.key;
+    ssl_certificate     /srv/ssl/static.{{ env.DOMAIN }}.crt;
+    ssl_certificate_key /srv/ssl/static.{{ env.DOMAIN }}.key;
 
     keepalive_timeout    90;
     client_max_body_size 1m;
@@ -111,7 +111,7 @@ server {
     listen      80;
     listen [::]:80;
 
-    server_name static.{{ env_vars.DOMAIN }};
+    server_name static.{{ env.DOMAIN }};
 
     keepalive_timeout    90;
     client_max_body_size 1m;
@@ -158,10 +158,10 @@ server {
     listen      443 ssl http2;
     listen [::]:443 ssl http2;
 
-    server_name www.{{ env_vars.DOMAIN }};
+    server_name www.{{ env.DOMAIN }};
 
-    ssl_certificate     /srv/ssl/www.{{ env_vars.DOMAIN }}.crt;
-    ssl_certificate_key /srv/ssl/www.{{ env_vars.DOMAIN }}.key;
+    ssl_certificate     /srv/ssl/www.{{ env.DOMAIN }}.crt;
+    ssl_certificate_key /srv/ssl/www.{{ env.DOMAIN }}.key;
 
     keepalive_timeout    90;
     client_max_body_size 1m;
@@ -189,7 +189,7 @@ server {
     listen      80;
     listen [::]:80;
 
-    server_name www.{{ env_vars.DOMAIN }};
+    server_name www.{{ env.DOMAIN }};
 
     keepalive_timeout    90;
     client_max_body_size 1m;
@@ -244,10 +244,10 @@ server {
     listen      443 ssl http2;
     listen [::]:443 ssl http2;
 
-    server_name api.{{ env_vars.DOMAIN }};
+    server_name api.{{ env.DOMAIN }};
 
-    ssl_certificate     /srv/ssl/api.{{ env_vars.DOMAIN }}.crt;
-    ssl_certificate_key /srv/ssl/api.{{ env_vars.DOMAIN }}.key;
+    ssl_certificate     /srv/ssl/api.{{ env.DOMAIN }}.crt;
+    ssl_certificate_key /srv/ssl/api.{{ env.DOMAIN }}.key;
 
     client_max_body_size 1m;
 
@@ -287,7 +287,7 @@ server {
     listen      80;
     listen [::]:80;
 
-    server_name api.{{ env_vars.DOMAIN }};
+    server_name api.{{ env.DOMAIN }};
 
     client_max_body_size 1m;
 
@@ -356,10 +356,10 @@ server {
     listen      443 ssl http2;
     listen [::]:443 ssl http2;
 
-    server_name manage.{{ env_vars.DOMAIN }};
+    server_name manage.{{ env.DOMAIN }};
 
-    ssl_certificate     /srv/ssl/manage.{{ env_vars.DOMAIN }}.crt;
-    ssl_certificate_key /srv/ssl/manage.{{ env_vars.DOMAIN }}.key;
+    ssl_certificate     /srv/ssl/manage.{{ env.DOMAIN }}.crt;
+    ssl_certificate_key /srv/ssl/manage.{{ env.DOMAIN }}.key;
 
     root       /srv/cryptoexchange/empty;
     access_log /var/log/nginx/manage_https_access_log;
@@ -385,7 +385,7 @@ server {
     listen      80;
     listen [::]:80;
 
-    server_name manage.{{ env_vars.DOMAIN }};
+    server_name manage.{{ env.DOMAIN }};
 
     root       /srv/cryptoexchange/empty;
     access_log /var/log/nginx/manage_http_access_log;
@@ -411,10 +411,10 @@ server {
     listen      443 ssl http2;
     listen [::]:443 ssl http2;
 
-    server_name wss.{{ env_vars.DOMAIN }};
+    server_name wss.{{ env.DOMAIN }};
 
-    ssl_certificate     /srv/ssl/wss.{{ env_vars.DOMAIN }}.crt;
-    ssl_certificate_key /srv/ssl/wss.{{ env_vars.DOMAIN }}.key;
+    ssl_certificate     /srv/ssl/wss.{{ env.DOMAIN }}.crt;
+    ssl_certificate_key /srv/ssl/wss.{{ env.DOMAIN }}.key;
 
     root       /srv/cryptoexchange/empty;
     access_log /var/log/nginx/wss_access_log;

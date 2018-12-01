@@ -20,7 +20,7 @@ filebeat.prospectors:
   multiline.match: after
   fields:
     env: '{{ profile }}'
-    app: '{{ app }}'
+    app: '{{ app.name }}'
   scan_frequency: 1s
   fields_under_root: true
   queue.mem:
@@ -35,7 +35,7 @@ processors:
     overwrite_keys: true
 
 output.elasticsearch:
-  hosts: ["{{ env_vars.ELK_HOST }}"]
+  hosts: ["{{ env.ELK_HOST }}"]
   protocol: "https"
   pipelines:
     - pipeline: decode_metrics

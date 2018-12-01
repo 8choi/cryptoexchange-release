@@ -26,39 +26,42 @@
 
 ---
 
-- hosts: "{{ app }}"
+- hosts: "{{ name }}"
   vars_files:
     - environments/vars.yml
   roles:
+    # init var "app" for app.name = xxx, app.deploy_type = xxx, app.xmx = xxx, ...
     - { role: init_vars }
+
+    # init var "env" for env.ABC = xxx, env.XYZ = xxx, ...
     - { role: init_env }
 
     - { role: init_log_dir }
-    - { role: init_app_dir, when app != 'mq' }
+    - { role: init_app_dir, when app.name != 'mq' }
 
-    - { role: init_snapshot_dir, when: profile == 'native' and app == 'spot-match' }
+    - { role: init_snapshot_dir, when: profile == 'native' and app.name == 'spot-match' }
 
-    - { role: install_filebeat,  when: profile != 'native' and app != 'mq' }
-    - { role: gen_filebeat_conf, when: profile != 'native' and app != 'mq' }
+    - { role: install_filebeat,  when: profile != 'native' and app.name != 'mq' }
+    - { role: gen_filebeat_conf, when: profile != 'native' and app.name != 'mq' }
 
-    - { role: deploy_ssl, when: app == 'www' or app == 'hd-cold-wallet' }
+    - { role: deploy_ssl, when: app.name == 'www' or app.name == 'hd-cold-wallet' }
 
-    - { role: install_nginx,  when: deploy_type == 'blockchain' or app == 'hd-cold-wallet' }
-    - { role: gen_nginx_conf, when: deploy_type == 'blockchain' or app == 'hd-cold-wallet' }
+    - { role: install_nginx,  when: app.deploy_type == 'blockchain' or app.name == 'hd-cold-wallet' }
+    - { role: gen_nginx_conf, when: app.deploy_type == 'blockchain' or app.name == 'hd-cold-wallet' }
 
-    - { role: install_openresty,  when: deploy_type == 'static' }
-    - { role: deploy_static,      when: deploy_type == 'static' }
-    - { role: gen_openresty_conf, when: deploy_type == 'static' }
+    - { role: install_openresty,  when: app.deploy_type == 'static' }
+    - { role: deploy_static,      when: app.deploy_type == 'static' }
+    - { role: gen_openresty_conf, when: app.deploy_type == 'static' }
 
-    - { role: install_jre,        when: deploy_type == 'jar' or deploy_type == 'mq' }
-    - { role: deploy_jar,         when: deploy_type == 'jar' }
-    - { role: deploy_mq,          when: deploy_type == 'mq' }
-    - { role: deploy_config_repo, when: profile == 'native' and app == 'config' }
+    - { role: install_jre,        when: app.deploy_type == 'jar' or app.deploy_type == 'mq' }
+    - { role: deploy_jar,         when: app.deploy_type == 'jar' }
+    - { role: deploy_mq,          when: app.deploy_type == 'mq' }
+    - { role: deploy_config_repo, when: profile == 'native' and app.name == 'config' }
 
-    - { role: install_nodejs, when: deploy_type == 'js' }
-    - { role: deploy_js,      when: deploy_type == 'js' }
+    - { role: install_nodejs, when: app.deploy_type == 'js' }
+    - { role: deploy_js,      when: app.deploy_type == 'js' }
 
-    - { role: update_symbol_link, when: deploy_type == 'jar' or deploy_type == 'js' or deploy_type == 'static' }
+    - { role: update_symbol_link, when: app.deploy_type == 'jar' or app.deploy_type == 'js' or app.deploy_type == 'static' }
 
-    - { role: install_supervisor,  when: deploy_type == 'jar' or deploy_type == 'js' or deploy_type == 'mq' }
-    - { role: gen_supervisor_conf, when: deploy_type == 'jar' or deploy_type == 'js' or deploy_type == 'mq' }
+    - { role: install_supervisor,  when: app.deploy_type == 'jar' or app.deploy_type == 'js' or app.deploy_type == 'mq' }
+    - { role: gen_supervisor_conf, when: app.deploy_type == 'jar' or app.deploy_type == 'js' or app.deploy_type == 'mq' }

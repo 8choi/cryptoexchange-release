@@ -1,20 +1,20 @@
-# update symbol link /srv/cryptoexchange/{{ app }} -> /srv/cryptoexchange/{{ app }}-{{ timestamp }}
+# update symbol link /srv/cryptoexchange/{{ app.name }} -> /srv/cryptoexchange/{{ app.name }}-{{ app.timestamp }}
 
 ---
 
-- name: remove old symbol link /srv/cryptoexchange/{{ app }}
+- name: remove old symbol link /srv/cryptoexchange/{{ app.name }}
   file:
-    path: /srv/cryptoexchange/{{ app }}
+    path: /srv/cryptoexchange/{{ app.name }}
     state: absent
 
-- name: create symbol link /srv/cryptoexchange/{{ app }} -> /srv/cryptoexchange/{{ app }}-{{ timestamp }}
+- name: create symbol link /srv/cryptoexchange/{{ app.name }} -> /srv/cryptoexchange/{{ app.name }}-{{ app.timestamp }}
   file:
-    src: /srv/cryptoexchange/{{ app }}-{{ timestamp }}
-    dest: /srv/cryptoexchange/{{ app }}
+    src: /srv/cryptoexchange/{{ app.name }}-{{ app.timestamp }}
+    dest: /srv/cryptoexchange/{{ app.name }}
     state: link
 
-- name: remove old deployed targets from /srv/cryptoexchange/{{ app }}-*
-  shell: "ls -td -1 {{ app }}-* | tail -n +11"
+- name: remove old deployed targets from /srv/cryptoexchange/{{ app.name }}-*
+  shell: "ls -td -1 {{ app.name }}-* | tail -n +11"
   args:
     chdir: /srv/cryptoexchange/
   register: to_be_deleted
