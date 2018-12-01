@@ -46,14 +46,14 @@ end
 
 local ratelimit = require "redis_limit"
 
-local lim, err = ratelimit.new("ratelimit", "{{ hostvars[groups['www']].lua_rate_limit }}r/s", {{ hostvars[groups['www']].lua_rate_burst }}, 0)
+local lim, err = ratelimit.new("ratelimit", "{{ hostvars[groups[app.name]].lua_rate_limit }}r/s", {{ hostvars[groups[app.name]].lua_rate_burst }}, 0)
 if not lim then
     ngx.log(ngx.ERR,
             "failed to instantiate a resty.redis.limit object: ", err)
     return error(500, "INTERNAL_SERVER_ERROR", "Internal error: internal server error.")
 end
 
-local red = { host = "{{ hostvars[groups['www']].lua_redis_host }}", port = 6379, timeout = 1 }
+local red = { host = "{{ hostvars[groups[app.name]].lua_redis_host }}", port = 6379, timeout = 1 }
 
 local delay, err = lim:incoming(token, red)
 
