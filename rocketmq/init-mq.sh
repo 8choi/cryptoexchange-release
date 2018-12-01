@@ -2,7 +2,9 @@
 
 # init topics
 
-JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
+# JAVA_HOME=`/usr/libexec/java_home -v 1.8`
 
 export ROCKETMQ_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo "working dir is set to: $ROCKETMQ_HOME"
