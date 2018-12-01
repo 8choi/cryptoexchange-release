@@ -86,6 +86,10 @@ envs:
       ENABLE_STOP: "true"
       ENABLE_STOP_LIMIT: "true"
       ENABLE_TRAILING_STOP: "true"
+    config:
+      GIT_CONFIG_URL: https://git-repo-url
+      GIT_CONFIG_USERNAME: git
+      GIT_CONFIG_PASSWORD: changeit
     mq:
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
       ROCKETMQ_HOME: /srv/rocketmq
