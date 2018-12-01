@@ -209,6 +209,33 @@ server {
 }
 
 ###############################################################################
+# http://ui endpoint
+###############################################################################
+
+server {
+
+    listen      7000;
+
+    server_name _;
+
+    keepalive_timeout    90;
+    client_max_body_size 1m;
+    sendfile             on;
+
+    root       /srv/cryptoexchange/empty;
+    access_log /var/log/nginx/ui_endpoint_access_log;
+    error_log  /var/log/nginx/ui_endpoint_error_log;
+
+    location / {
+        proxy_pass       http://www_servers;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+###############################################################################
 # https://api access by end user
 ###############################################################################
 
@@ -241,7 +268,7 @@ server {
     }
 
     location ~ ^/v1 {
-        access_by_lua_file "/etc/openresty/script/auth_limit.lua";
+        # FIXME: access_by_lua_file "/etc/openresty/script/auth_limit.lua";
 
         proxy_pass       http://api_servers;
         proxy_set_header Host $host;
@@ -289,6 +316,27 @@ server {
         proxy_set_header X-Forwarded-Proto https;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
+}
+
+###############################################################################
+# http://api end point
+###############################################################################
+
+server {
+
+    listen      7001;
+
+    server_name _;
+
+    client_max_body_size 1m;
+
+    root       /srv/cryptoexchange/empty;
+    access_log /var/log/nginx/api_endpoint_access_log;
+    error_log  /var/log/nginx/api_endpoint_error_log;
+
+    charset utf-8;
+    charset_types application/json;
+    default_type application/json;
 
     location / {
         proxy_pass       http://api_servers;
