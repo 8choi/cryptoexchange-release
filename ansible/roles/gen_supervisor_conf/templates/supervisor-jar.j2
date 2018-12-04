@@ -5,7 +5,7 @@
 [program:{{ app.name }}]
 
 command      = java -Xmx{{ app.xmx }}m -Xms{{ app.xmx }}m -jar crypto-{{ app.name }}.jar
-environment  = {% for k, v in env.items() %}{{ k }}="{{ v }}",{% endfor %}THE_LAST="END"
+environment  = {% for k, v in env.items() %}{{ k }}="{{ v }}",{% endfor %}ENV="{{ profile }}"
 directory    = /srv/cryptoexchange/{{ app.name }}
 user         = www-data
 startsecs    = 10

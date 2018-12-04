@@ -5,7 +5,7 @@
 [program:{{ app.name }}]
 
 command      = node crypto-{{ app.name }}.js
-environment  = {% for k, v in env.items() %}{{ k }}="{{ v }}",{% endfor %}THE_LAST="END"
+environment  = {% for k, v in env.items() %}{{ k }}="{{ v }}",{% endfor %}ENV="{{ profile }}"
 directory    = /srv/cryptoexchange/{{ app.name }}
 user         = www-data
 startsecs    = 10
