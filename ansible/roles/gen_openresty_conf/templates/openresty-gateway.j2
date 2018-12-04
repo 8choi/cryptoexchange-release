@@ -46,63 +46,6 @@ server {
 }
 
 ###############################################################################
-# ssl cache
-###############################################################################
-
-ssl_session_cache   shared:SSL:10m;
-ssl_session_timeout 20m;
-
-###############################################################################
-# https://static access by end user
-###############################################################################
-
-server {
-
-    listen      443 ssl http2;
-    listen [::]:443 ssl http2;
-
-    server_name static.{{ env.DOMAIN }};
-
-    ssl_certificate     /srv/ssl/static.{{ env.DOMAIN }}.crt;
-    ssl_certificate_key /srv/ssl/static.{{ env.DOMAIN }}.key;
-
-    keepalive_timeout    90;
-    client_max_body_size 1m;
-    sendfile             on;
-
-    root       /srv/cryptoexchange/www;
-    access_log /var/log/nginx/static_https_access_log;
-    error_log  /var/log/nginx/static_https_error_log;
-
-    expires 100d;
-
-    location / {
-        if ($request_method = 'OPTIONS') {
-            add_header 'Access-Control-Allow-Origin' '*';
-            add_header 'Access-Control-Allow-Credentials' 'true';
-            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
-            add_header 'Access-Control-Allow-Headers' 'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
-            add_header 'Access-Control-Max-Age' 1728000;
-            add_header 'Content-Type' 'text/plain charset=UTF-8';
-            add_header 'Content-Length' 0;
-            return 204;
-        }
-        if ($request_method = 'POST') {
-            add_header 'Access-Control-Allow-Origin' '*';
-            add_header 'Access-Control-Allow-Credentials' 'true';
-            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
-            add_header 'Access-Control-Allow-Headers' 'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
-        }
-        if ($request_method = 'GET') {
-            add_header 'Access-Control-Allow-Origin' '*';
-            add_header 'Access-Control-Allow-Credentials' 'true';
-            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
-            add_header 'Access-Control-Allow-Headers' 'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
-        }
-    }
-}
-
-###############################################################################
 # http://static access by ELB
 ###############################################################################
 
@@ -146,37 +89,6 @@ server {
             add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
             add_header 'Access-Control-Allow-Headers' 'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
         }
-    }
-}
-
-###############################################################################
-# https://www access by end user
-###############################################################################
-
-server {
-
-    listen      443 ssl http2;
-    listen [::]:443 ssl http2;
-
-    server_name www.{{ env.DOMAIN }};
-
-    ssl_certificate     /srv/ssl/www.{{ env.DOMAIN }}.crt;
-    ssl_certificate_key /srv/ssl/www.{{ env.DOMAIN }}.key;
-
-    keepalive_timeout    90;
-    client_max_body_size 1m;
-    sendfile             on;
-
-    root       /srv/cryptoexchange/empty;
-    access_log /var/log/nginx/www_https_access_log;
-    error_log  /var/log/nginx/www_https_error_log;
-
-    location / {
-        proxy_pass       http://www_servers;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-Proto https;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 }
 
@@ -228,49 +140,6 @@ server {
 
     location / {
         proxy_pass       http://www_servers;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-Proto https;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-}
-
-###############################################################################
-# https://api access by end user
-###############################################################################
-
-server {
-
-    listen      443 ssl http2;
-    listen [::]:443 ssl http2;
-
-    server_name api.{{ env.DOMAIN }};
-
-    ssl_certificate     /srv/ssl/api.{{ env.DOMAIN }}.crt;
-    ssl_certificate_key /srv/ssl/api.{{ env.DOMAIN }}.key;
-
-    client_max_body_size 1m;
-
-    root       /srv/cryptoexchange/empty;
-    access_log /var/log/nginx/api_https_access_log;
-    error_log  /var/log/nginx/api_https_error_log;
-
-    charset utf-8;
-    charset_types application/json;
-    default_type application/json;
-
-    location ~ ^/v1/market {
-        proxy_pass       http://api_servers;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-Proto https;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-
-    location ~ ^/v1 {
-        # FIXME: access_by_lua_file "/etc/openresty/script/auth_limit.lua";
-
-        proxy_pass       http://api_servers;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-Proto https;
@@ -348,6 +217,165 @@ server {
 }
 
 ###############################################################################
+# http://manage access by ELB
+###############################################################################
+
+server {
+
+    listen      80;
+    listen [::]:80;
+
+    server_name manage.{{ env.DOMAIN }};
+
+    root       /srv/cryptoexchange/empty;
+    access_log /var/log/nginx/manage_http_access_log;
+    error_log  /var/log/nginx/manage_http_error_log;
+
+    sendfile on;
+
+    location / {
+        proxy_pass       http://manage_servers;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+{% if profile == 'native' %}
+
+###############################################################################
+# ssl cache
+###############################################################################
+
+ssl_session_cache   shared:SSL:10m;
+ssl_session_timeout 20m;
+
+###############################################################################
+# https://static access by end user
+###############################################################################
+
+server {
+
+    listen      443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    server_name static.{{ env.DOMAIN }};
+
+    ssl_certificate     /srv/ssl/static.{{ env.DOMAIN }}.crt;
+    ssl_certificate_key /srv/ssl/static.{{ env.DOMAIN }}.key;
+
+    keepalive_timeout    90;
+    client_max_body_size 1m;
+    sendfile             on;
+
+    root       /srv/cryptoexchange/www;
+    access_log /var/log/nginx/static_https_access_log;
+    error_log  /var/log/nginx/static_https_error_log;
+
+    expires 100d;
+
+    location / {
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain charset=UTF-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+        if ($request_method = 'POST') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+        }
+        if ($request_method = 'GET') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+        }
+    }
+}
+
+###############################################################################
+# https://www access by end user
+###############################################################################
+
+server {
+
+    listen      443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    server_name www.{{ env.DOMAIN }};
+
+    ssl_certificate     /srv/ssl/www.{{ env.DOMAIN }}.crt;
+    ssl_certificate_key /srv/ssl/www.{{ env.DOMAIN }}.key;
+
+    keepalive_timeout    90;
+    client_max_body_size 1m;
+    sendfile             on;
+
+    root       /srv/cryptoexchange/empty;
+    access_log /var/log/nginx/www_https_access_log;
+    error_log  /var/log/nginx/www_https_error_log;
+
+    location / {
+        proxy_pass       http://www_servers;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+###############################################################################
+# https://api access by end user
+###############################################################################
+
+server {
+
+    listen      443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    server_name api.{{ env.DOMAIN }};
+
+    ssl_certificate     /srv/ssl/api.{{ env.DOMAIN }}.crt;
+    ssl_certificate_key /srv/ssl/api.{{ env.DOMAIN }}.key;
+
+    client_max_body_size 1m;
+
+    root       /srv/cryptoexchange/empty;
+    access_log /var/log/nginx/api_https_access_log;
+    error_log  /var/log/nginx/api_https_error_log;
+
+    charset utf-8;
+    charset_types application/json;
+    default_type application/json;
+
+    location ~ ^/v1/market {
+        proxy_pass       http://api_servers;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location ~ ^/v1 {
+        # FIXME: access_by_lua_file "/etc/openresty/script/auth_limit.lua";
+
+        proxy_pass       http://api_servers;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+###############################################################################
 # https://manage access by end user
 ###############################################################################
 
@@ -364,32 +392,6 @@ server {
     root       /srv/cryptoexchange/empty;
     access_log /var/log/nginx/manage_https_access_log;
     error_log  /var/log/nginx/manage_https_error_log;
-
-    sendfile on;
-
-    location / {
-        proxy_pass       http://manage_servers;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-Proto https;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-}
-
-###############################################################################
-# http://manage access by ELB
-###############################################################################
-
-server {
-
-    listen      80;
-    listen [::]:80;
-
-    server_name manage.{{ env.DOMAIN }};
-
-    root       /srv/cryptoexchange/empty;
-    access_log /var/log/nginx/manage_http_access_log;
-    error_log  /var/log/nginx/manage_http_error_log;
 
     sendfile on;
 
@@ -431,3 +433,5 @@ server {
         proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 }
+
+{% endif %}
