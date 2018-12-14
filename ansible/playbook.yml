@@ -41,8 +41,8 @@
 
     - { role: init_snapshot_dir, when: profile == 'native' and app.name == 'spot-match' }
 
-    - { role: install_filebeat,  when: profile != 'native' and app.name != 'mq' }
-    - { role: gen_filebeat_conf, when: profile != 'native' and app.name != 'mq' }
+    - { role: install_filebeat,  when: profile != 'native' and app.name != 'mq' and app.name != 'www' }
+    - { role: gen_filebeat_conf, when: profile != 'native' and app.name != 'mq' and app.name != 'www' }
 
     - { role: deploy_ssl, when: app.name == 'www' or app.name == 'hd-cold-wallet' }
 
