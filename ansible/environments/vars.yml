@@ -17,7 +17,7 @@ apps:
   mq:
     deploy_type: mq
   notification:
-    deploy_type: js
+    deploy_type: jar
   sequence:
     deploy_type: jar
   quotation:
