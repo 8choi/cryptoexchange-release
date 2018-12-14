@@ -6,5 +6,8 @@ server:
 crypto:
   notification:
     api:
-      # api endpoint address:
+      # API URL:
       endpoint: ${API_ENDPOINT:http://localhost:8001}
+      # token key / secret used for encrypted cookie:
+      token-key: ${UI_TOKEN_KEY:tokenKey}
+      token-secret: ${UI_TOKEN_SECRET:tokenSecret}
