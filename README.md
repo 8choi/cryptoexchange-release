@@ -84,7 +84,7 @@ Stop：一个Stop订单将在市场价格达到指定触发价时自动以市价
 
 StopLimit：Stop-limit订单和Stop订单类似，在市场价格达到指定触发价时自动执行。不同的是，Stop-limit订单以限价单执行，因此，Stop-limit订单可能不会立刻完全成交。
 
-TrailingStop：移动止损点单，Trailing-stop订单提供了高度的灵活性，它在在市场价格向着头寸有利方向移动时，当市场价格回调至指定价格距离时自动以市价单触发执行。合理使用Trailing-stop订单可以让盈利最大化。
+TrailingStop：移动止损单，Trailing-stop订单提供了高度的灵活性，它在在市场价格向着头寸有利方向移动时，当市场价格回调至指定价格距离时自动以市价单触发执行。合理使用Trailing-stop订单可以让盈利最大化。
 
 ## 软件运行平台
 
